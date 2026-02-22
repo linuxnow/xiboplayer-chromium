@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xiboplayer"
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xiboplayer/chromium"
 CONFIG_FILE="${CONFIG_DIR}/config.json"
 LOCK_FILE="/tmp/xiboplayer-kiosk.lock"
 SERVER_PID_FILE="/tmp/xiboplayer-server.pid"
@@ -216,8 +216,8 @@ build_chromium_args() {
     )
 
     # XDG-compliant profile directory
-    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer"
-    BROWSER_ARGS+=(--user-data-dir="$data_dir/chromium-profile")
+    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/chromium"
+    BROWSER_ARGS+=(--user-data-dir="$data_dir")
 
     # Append any user-defined extra flags
     if [[ -n "$EXTRA_BROWSER_FLAGS" ]]; then
@@ -268,9 +268,9 @@ main() {
     echo "[xiboplayer]   Binary:  $browser_bin" >&2
 
     # Create profile directory and kiosk policies
-    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer"
-    mkdir -p "$data_dir/chromium-profile/policies/managed" 2>/dev/null || true
-    cat > "$data_dir/chromium-profile/policies/managed/kiosk.json" << 'POLICY'
+    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/chromium"
+    mkdir -p "$data_dir/policies/managed" 2>/dev/null || true
+    cat > "$data_dir/policies/managed/kiosk.json" << 'POLICY'
 {
   "TranslateEnabled": false,
   "AutoFillEnabled": false,
