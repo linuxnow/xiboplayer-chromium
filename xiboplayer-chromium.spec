@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           xiboplayer-chromium
-Version:        0.4.8
+Version:        0.4.9
 Release:        1%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
@@ -107,6 +107,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Feb 24 2026 Pau Aliagas <linuxnow@gmail.com> - 0.4.9-1
+- Fix
+
 * Mon Feb 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.4.8-1
 - Bump to 0.4.8
 
