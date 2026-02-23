@@ -39,14 +39,14 @@ Self-contained Xibo digital signage player for kiosk deployments on Fedora, RHEL
 
 **Fedora/RHEL:**
 ```bash
-sudo dnf config-manager addrepo --from-repofile=https://dnf.xiboplayer.org/rpm/xibo-players.repo
+sudo dnf config-manager addrepo --from-repofile=https://dl.xiboplayer.org/rpm/xibo-players.repo
 sudo dnf install xiboplayer-chromium
 ```
 
 **Ubuntu/Debian:**
 ```bash
-curl -fsSL https://dnf.xiboplayer.org/deb/GPG-KEY.asc | sudo gpg --dearmor -o /usr/share/keyrings/xibo-players.gpg
-sudo curl -fsSL https://dnf.xiboplayer.org/deb/xibo-players.sources -o /etc/apt/sources.list.d/xibo-players.sources
+curl -fsSL https://dl.xiboplayer.org/deb/GPG-KEY.asc | sudo gpg --dearmor -o /usr/share/keyrings/xibo-players.gpg
+sudo curl -fsSL https://dl.xiboplayer.org/deb/xibo-players.sources -o /etc/apt/sources.list.d/xibo-players.sources
 sudo apt update && sudo apt install xiboplayer-chromium
 ```
 
