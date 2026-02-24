@@ -10,12 +10,17 @@ Type=simple
 ExecStart=/usr/bin/xiboplayer-chromium
 Restart=always
 RestartSec=5
-TimeoutStopSec=10
+TimeoutStopSec=15
+TimeoutStopFailureMode=terminate
 KillMode=mixed
 KillSignal=SIGTERM
+FinalKillSignal=SIGKILL
+LimitCORE=0
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=xiboplayer-chromium
+StartLimitIntervalSec=60
+StartLimitBurst=5
 
 [Install]
 WantedBy=graphical-session.target
