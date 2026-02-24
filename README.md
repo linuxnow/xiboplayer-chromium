@@ -128,6 +128,52 @@ systemctl --user status xiboplayer-kiosk.service
 journalctl --user -u xiboplayer-kiosk.service -f
 ```
 
+## Multiple Displays
+
+Run multiple independent player instances on the same machine using `--instance=NAME`. Each instance gets its own config, browser profile, and server port:
+
+```bash
+# Instance "lobby" — port 8766 (default)
+xiboplayer --instance=lobby
+
+# Instance "cafeteria" — port 8767
+xiboplayer --instance=cafeteria --port=8767
+```
+
+Each instance uses isolated paths:
+
+| | Default (no instance) | `--instance=lobby` |
+|---|---|---|
+| **Config** | `~/.config/xiboplayer/chromium/` | `~/.config/xiboplayer/chromium-lobby/` |
+| **Browser data** | `~/.local/share/xiboplayer/chromium/` | `~/.local/share/xiboplayer/chromium-lobby/` |
+| **Lock file** | `/tmp/xiboplayer-kiosk.lock` | `/tmp/xiboplayer-kiosk-lobby.lock` |
+
+### Setup
+
+1. Create a config for each instance:
+```bash
+mkdir -p ~/.config/xiboplayer/chromium-lobby
+cat > ~/.config/xiboplayer/chromium-lobby/config.json << 'EOF'
+{
+  "cmsUrl": "https://cms.example.com",
+  "cmsKey": "your-key",
+  "displayName": "Lobby Display",
+  "serverPort": 8766
+}
+EOF
+```
+
+2. Create a systemd service per instance (or use `--port` to override):
+```bash
+# Copy and customize the service file
+cp ~/.config/systemd/user/xiboplayer-kiosk.service \
+   ~/.config/systemd/user/xiboplayer-lobby.service
+# Edit: ExecStart=/usr/bin/xiboplayer --instance=lobby
+systemctl --user enable --now xiboplayer-lobby.service
+```
+
+Each instance registers as a separate display in the CMS.
+
 ## Building
 
 ### RPM

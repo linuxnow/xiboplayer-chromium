@@ -50,17 +50,38 @@ else
     fi
 fi
 
-# CLI --port=XXXX overrides config.json
+# CLI overrides
+INSTANCE=""
 for arg in "$@"; do
     case "$arg" in
         --port=*) SERVER_PORT="${arg#*=}" ;;
+        --instance=*) INSTANCE="${arg#*=}" ;;
     esac
 done
+
+# Multi-instance support: --instance=NAME isolates config, data, lock, and PID
+if [[ -n "$INSTANCE" ]]; then
+    CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xiboplayer/chromium-${INSTANCE}"
+    CONFIG_FILE="${CONFIG_DIR}/config.json"
+    LOCK_FILE="/tmp/xiboplayer-kiosk-${INSTANCE}.lock"
+    SERVER_PID_FILE="/tmp/xiboplayer-server-${INSTANCE}.pid"
+    # Re-read config from the instance-specific path
+    if [[ -f "$CONFIG_FILE" ]]; then
+        CONFIG_PORT=$(jq -r '.serverPort // empty' "$CONFIG_FILE" 2>/dev/null) || true
+        [[ -n "$CONFIG_PORT" ]] && SERVER_PORT="$CONFIG_PORT"
+        BROWSER=$(jq -r '.browser // "chromium"' "$CONFIG_FILE" 2>/dev/null) || true
+        EXTRA_BROWSER_FLAGS=$(jq -r '.extraBrowserFlags // empty' "$CONFIG_FILE" 2>/dev/null) || true
+    else
+        mkdir -p "$CONFIG_DIR"
+    fi
+fi
 PLAYER_URL="http://localhost:${SERVER_PORT}/player/"
 
 # No cmsUrl in config.json → unconfigured. Wipe stale browser data so
 # the PWA shows the setup screen instead of booting from ghost config.
-DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/chromium"
+DATA_SUFFIX="chromium"
+[[ -n "$INSTANCE" ]] && DATA_SUFFIX="chromium-${INSTANCE}"
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/${DATA_SUFFIX}"
 CMS_URL=$(jq -r '.cmsUrl // empty' "$CONFIG_FILE" 2>/dev/null) || true
 if [[ -z "$CMS_URL" && -d "$DATA_DIR" ]]; then
     rm -rf "$DATA_DIR/Default/Local Storage" \
@@ -239,8 +260,10 @@ build_chromium_args() {
         "--auto-select-desktop-capture-source=Entire screen"
     )
 
-    # XDG-compliant profile directory
-    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/chromium"
+    # XDG-compliant profile directory (instance-aware)
+    local data_suffix="chromium"
+    [[ -n "$INSTANCE" ]] && data_suffix="chromium-${INSTANCE}"
+    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/${data_suffix}"
     BROWSER_ARGS+=(--user-data-dir="$data_dir")
 
     # Append any user-defined extra flags
@@ -259,6 +282,7 @@ build_chromium_args() {
 # ---------------------------------------------------------------------------
 main() {
     echo "[xiboplayer] Starting Xibo Player (self-contained)" >&2
+    [[ -n "$INSTANCE" ]] && echo "[xiboplayer]   Instance: $INSTANCE" >&2
     echo "[xiboplayer]   Browser: $BROWSER" >&2
     echo "[xiboplayer]   Server:  http://localhost:$SERVER_PORT" >&2
 
@@ -292,7 +316,9 @@ main() {
     echo "[xiboplayer]   Binary:  $browser_bin" >&2
 
     # Create profile directory and kiosk policies
-    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/chromium"
+    local data_suffix="chromium"
+    [[ -n "$INSTANCE" ]] && data_suffix="chromium-${INSTANCE}"
+    local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/${data_suffix}"
     mkdir -p "$data_dir/policies/managed" 2>/dev/null || true
     cat > "$data_dir/policies/managed/kiosk.json" << 'POLICY'
 {
