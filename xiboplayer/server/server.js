@@ -50,7 +50,7 @@ console.log(`[Server] PWA path: ${pwaPath}`);
 console.log(`[Server] Port: ${serverPort}`);
 
 import('@xiboplayer/proxy').then(({ startServer }) => {
-  return startServer({ port: serverPort, pwaPath, appVersion: APP_VERSION, cmsConfig });
+  return startServer({ port: serverPort, pwaPath, appVersion: APP_VERSION, cmsConfig, configFilePath: configPath });
 }).catch((err) => {
   console.error('[Server] Failed to start:', err.message);
   process.exit(1);
