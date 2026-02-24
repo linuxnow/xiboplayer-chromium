@@ -49,6 +49,19 @@ else
     fi
 fi
 
+# No cmsUrl in config.json → unconfigured. Wipe stale browser data so
+# the PWA shows the setup screen instead of booting from ghost config.
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/chromium"
+CMS_URL=$(jq -r '.cmsUrl // empty' "$CONFIG_FILE" 2>/dev/null) || true
+if [[ -z "$CMS_URL" && -d "$DATA_DIR" ]]; then
+    rm -rf "$DATA_DIR/Default/Local Storage" \
+           "$DATA_DIR/Default/IndexedDB" \
+           "$DATA_DIR/Default/Service Worker" \
+           "$DATA_DIR/Default/Cache" \
+           "$DATA_DIR/Default/Code Cache" 2>/dev/null || true
+    echo "[xiboplayer] Unconfigured — cleared stale browser data" >&2
+fi
+
 # ---------------------------------------------------------------------------
 # Locking — prevent duplicate instances
 # ---------------------------------------------------------------------------
