@@ -258,6 +258,10 @@ build_chromium_args() {
         --password-store=basic
         --lang=en-US
         "--auto-select-desktop-capture-source=Entire screen"
+        # Prevent GPU crash and renderer freeze when screen is locked/off
+        --disable-gpu-watchdog
+        --disable-background-timer-throttling
+        --disable-renderer-backgrounding
     )
 
     # XDG-compliant profile directory (instance-aware)
