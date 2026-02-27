@@ -57,6 +57,9 @@ for arg in "$@"; do
     case "$arg" in
         --port=*) SERVER_PORT="${arg#*=}" ;;
         --instance=*) INSTANCE="${arg#*=}" ;;
+        --server-dir=*) SERVER_DIR="${arg#*=}" ;;
+        --pwa-path=*) PWA_PATH="${arg#*=}" ;;
+        --no-kiosk) NO_KIOSK=1 ;;
     esac
 done
 
@@ -218,8 +221,11 @@ start_server() {
         exit 1
     fi
 
+    local server_args=(--port="$SERVER_PORT")
+    [[ -n "${PWA_PATH:-}" ]] && server_args+=(--pwa-path="$PWA_PATH")
+
     echo "[xiboplayer] Starting local server on port $SERVER_PORT..." >&2
-    node "$SERVER_DIR/server.js" --port="$SERVER_PORT" &
+    node "$SERVER_DIR/server.js" "${server_args[@]}" &
     local srv_pid=$!
     echo "$srv_pid" > "$SERVER_PID_FILE"
 
@@ -249,7 +255,6 @@ start_server() {
 # ---------------------------------------------------------------------------
 build_chromium_args() {
     BROWSER_ARGS=(
-        --kiosk
         --no-first-run
         --disable-translate
         --disable-infobars
@@ -272,6 +277,9 @@ build_chromium_args() {
         --disable-background-timer-throttling
         --disable-renderer-backgrounding
     )
+
+    # Kiosk mode (skip with --no-kiosk for development)
+    [[ -z "${NO_KIOSK:-}" ]] && BROWSER_ARGS=(--kiosk "${BROWSER_ARGS[@]}")
 
     # XDG-compliant profile directory (instance-aware)
     local data_suffix="chromium"
