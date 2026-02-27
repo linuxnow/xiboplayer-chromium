@@ -1,4 +1,8 @@
 {
+  "cmsUrl": "",
+  "cmsKey": "",
+  "displayName": "",
   "browser": "chromium",
-  "extraBrowserFlags": ""
+  "extraBrowserFlags": "",
+  "serverPort": 8766
 }

@@ -37,15 +37,17 @@ cp "$SCRIPT_DIR/xiboplayer/xiboplayer-chromium.desktop" "$SRC_DIR/"
 cp "$SCRIPT_DIR/xiboplayer/xiboplayer.png" "$SRC_DIR/"
 cp "$SCRIPT_DIR/xiboplayer/server/server.js" "$SRC_DIR/server/"
 cp "$SCRIPT_DIR/xiboplayer/server/package.json" "$SRC_DIR/server/"
+cp "$SCRIPT_DIR/xiboplayer/config.json.example" "$SRC_DIR/"
+cp "$SCRIPT_DIR/CONFIG.md" "$SRC_DIR/"
+cp "$SCRIPT_DIR/README.md" "$SRC_DIR/"
 
 # Create tarball
 cd "${BUILD_ROOT}/SOURCES"
 tar czf "${PKG_NAME}-${VERSION}.tar.gz" "${PKG_NAME}-${VERSION}"
 rm -rf "${PKG_NAME}-${VERSION}"
 
-# Copy spec with version substitution
+# Copy spec with version substitution (Release is set in the spec itself)
 sed -e "s/^Version:.*/Version:        ${VERSION}/" \
-    -e "s/^Release:.*/Release:        ${RELEASE}%{?dist}/" \
     "$SCRIPT_DIR/xiboplayer-chromium.spec" \
     > "$BUILD_ROOT/SPECS/${PKG_NAME}.spec"
 

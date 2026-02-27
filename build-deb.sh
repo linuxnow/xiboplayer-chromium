@@ -51,7 +51,15 @@ EOF
 chmod 755 "$BUILD_ROOT/${PKG_NAME}/usr/bin/${PKG_NAME}"
 
 install -m644 "$SCRIPT_DIR/xiboplayer/config.json" \
-    "$BUILD_ROOT/${PKG_NAME}/usr/share/${PKG_NAME}/config.json.example"
+    "$BUILD_ROOT/${PKG_NAME}/usr/share/${PKG_NAME}/config.json"
+
+mkdir -p "$BUILD_ROOT/${PKG_NAME}/usr/share/doc/${PKG_NAME}"
+install -m644 "$SCRIPT_DIR/xiboplayer/config.json.example" \
+    "$BUILD_ROOT/${PKG_NAME}/usr/share/doc/${PKG_NAME}/config.json.example"
+install -m644 "$SCRIPT_DIR/CONFIG.md" \
+    "$BUILD_ROOT/${PKG_NAME}/usr/share/doc/${PKG_NAME}/CONFIG.md"
+install -m644 "$SCRIPT_DIR/README.md" \
+    "$BUILD_ROOT/${PKG_NAME}/usr/share/doc/${PKG_NAME}/README.md"
 
 install -m644 "$SCRIPT_DIR/xiboplayer/xiboplayer-chromium.service" \
     "$BUILD_ROOT/${PKG_NAME}/usr/lib/systemd/user/${PKG_NAME}.service"

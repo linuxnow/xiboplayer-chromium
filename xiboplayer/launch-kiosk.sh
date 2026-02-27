@@ -45,8 +45,8 @@ if [[ -f "$CONFIG_FILE" ]]; then
 else
     # First run — create config directory (PWA setup page handles CMS registration)
     mkdir -p "$CONFIG_DIR"
-    if [[ -f /usr/share/xiboplayer-chromium/config.json.example ]]; then
-        cp /usr/share/xiboplayer-chromium/config.json.example "$CONFIG_FILE"
+    if [[ -f /usr/share/xiboplayer-chromium/config.json ]]; then
+        cp /usr/share/xiboplayer-chromium/config.json "$CONFIG_FILE"
         echo "[xiboplayer] Created default config at $CONFIG_FILE" >&2
     fi
 fi

@@ -2,7 +2,7 @@
 
 Name:           xiboplayer-chromium
 Version:        0.5.16
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
 License:        AGPL-3.0-or-later
@@ -55,9 +55,19 @@ install -Dm755 /dev/stdin %{buildroot}%{_bindir}/%{name} << 'WRAPPER'
 exec %{_libexecdir}/xiboplayer-chromium/launch-kiosk.sh "$@"
 WRAPPER
 
-# Config template (copied to ~/.config/xiboplayer/ on first run)
+# Minimal config (copied to ~/.config/xiboplayer/ on first run)
 install -Dm644 config.json \
-    %{buildroot}%{_datadir}/%{name}/config.json.example
+    %{buildroot}%{_datadir}/%{name}/config.json
+
+# Full config reference with all options documented
+install -Dm644 config.json.example \
+    %{buildroot}%{_docdir}/%{name}/config.json.example
+
+# Documentation
+install -Dm644 CONFIG.md \
+    %{buildroot}%{_docdir}/%{name}/CONFIG.md
+install -Dm644 README.md \
+    %{buildroot}%{_docdir}/%{name}/README.md
 
 # Systemd user service
 install -Dm644 %{name}.service \
@@ -75,6 +85,7 @@ install -Dm644 xiboplayer.png \
 %{_bindir}/%{name}
 %{_libexecdir}/%{name}/
 %{_datadir}/%{name}/
+%{_docdir}/%{name}/
 %{_userunitdir}/%{name}.service
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/256x256/apps/xiboplayer.png
@@ -107,20 +118,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.16-1
-- Add
-
-* Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.15-1
-- Add
-
-* Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.14-1
-- Add
-
-* Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.13-1
-- Move
-
-* Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.12-1
-- Bump to 0.5.12
-
-* Tue Feb 24 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.5-1
-- Initial release
+* Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.16-3
+- Install default config.json (not config.json.example) for first-run copy
+- Install full config reference and docs (CONFIG.md, README.md) to /usr/share/doc
+- Add webcam/microphone capture policies (VideoCaptureAllowed, AudioCaptureAllowed)
+- Add optional Google Geolocation API key support (googleGeoApiKey)
+- Add config.json controls for keyboard shortcuts and mouse hover
+- Add transport config option (auto/xmds) for unpatched Xibo CMS
