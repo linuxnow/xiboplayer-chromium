@@ -2,7 +2,7 @@
 
 Name:           xiboplayer-chromium
 Version:        0.5.16
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
 License:        AGPL-3.0-or-later
@@ -118,6 +118,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Feb 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.16-4
+- Fall back to Google Chrome when Chromium binary is not found
+- Add --server-dir, --pwa-path and --no-kiosk CLI options for development
+
 * Fri Feb 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.16-3
 - Install default config.json (not config.json.example) for first-run copy
 - Install full config reference and docs (CONFIG.md, README.md) to /usr/share/doc
