@@ -47,22 +47,22 @@ load_config() {
     BROWSER=$(jq -r '.browser // "chromium"' "$file" 2>/dev/null) || true
     EXTRA_BROWSER_FLAGS=$(jq -r '.extraBrowserFlags // empty' "$file" 2>/dev/null) || true
     local port; port=$(jq -r '.serverPort // empty' "$file" 2>/dev/null) || true
-    [[ -n "$port" ]] && SERVER_PORT="$port"
+    [[ -n "$port" ]] && SERVER_PORT="$port" || true
     GOOGLE_GEO_API_KEY=$(jq -r '.googleGeoApiKey // empty' "$file" 2>/dev/null) || true
     # Window / kiosk settings
     local val
     val=$(jq -r '.kioskMode // empty' "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && KIOSK_MODE="$val"
+    [[ -n "$val" ]] && KIOSK_MODE="$val" || true
     val=$(jq -r '.fullscreen // empty' "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && FULLSCREEN="$val"
+    [[ -n "$val" ]] && FULLSCREEN="$val" || true
     val=$(jq -r '.hideMouseCursor // empty' "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && HIDE_MOUSE_CURSOR="$val"
+    [[ -n "$val" ]] && HIDE_MOUSE_CURSOR="$val" || true
     val=$(jq -r '.preventSleep // empty' "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && PREVENT_SLEEP="$val"
+    [[ -n "$val" ]] && PREVENT_SLEEP="$val" || true
     val=$(jq -r '.width // empty' "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && WINDOW_WIDTH="$val"
+    [[ -n "$val" ]] && WINDOW_WIDTH="$val" || true
     val=$(jq -r '.height // empty' "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && WINDOW_HEIGHT="$val"
+    [[ -n "$val" ]] && WINDOW_HEIGHT="$val" || true
 }
 
 if [[ -f "$CONFIG_FILE" ]]; then
