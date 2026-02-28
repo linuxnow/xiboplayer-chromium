@@ -63,6 +63,8 @@ load_config() {
     [[ -n "$val" ]] && WINDOW_WIDTH="$val" || true
     val=$(jq -r '.height // empty' "$file" 2>/dev/null) || true
     [[ -n "$val" ]] && WINDOW_HEIGHT="$val" || true
+    val=$(jq -r '.logLevel // empty' "$file" 2>/dev/null) || true
+    [[ -n "$val" ]] && LOG_LEVEL="$val" || true
 }
 
 if [[ -f "$CONFIG_FILE" ]]; then
