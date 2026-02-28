@@ -65,6 +65,8 @@ load_config() {
     [[ -n "$val" ]] && WINDOW_HEIGHT="$val" || true
     val=$(jq -r '.logLevel // empty' "$file" 2>/dev/null) || true
     [[ -n "$val" ]] && LOG_LEVEL="$val" || true
+    val=$(jq -r '.relaxSslCerts // empty' "$file" 2>/dev/null) || true
+    [[ -n "$val" ]] && RELAX_SSL_CERTS="$val" || true
 }
 
 if [[ -f "$CONFIG_FILE" ]]; then
@@ -316,6 +318,14 @@ build_chromium_args() {
     [[ -n "$INSTANCE" ]] && data_suffix="chromium-${INSTANCE}"
     local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/xiboplayer/${data_suffix}"
     BROWSER_ARGS+=(--user-data-dir="$data_dir")
+
+    # Accept invalid SSL certificates for media/stream URLs (default: true)
+    # Self-signed certs on media streams are common in signage deployments.
+    # Set "relaxSslCerts": false in config.json to enforce strict SSL.
+    if [[ "${RELAX_SSL_CERTS:-true}" == "true" ]]; then
+        BROWSER_ARGS+=(--ignore-certificate-errors --test-type)
+        echo "[xiboplayer]   SSL:     relaxed (--ignore-certificate-errors)" >&2
+    fi
 
     # Append any user-defined extra flags
     if [[ -n "$EXTRA_BROWSER_FLAGS" ]]; then
