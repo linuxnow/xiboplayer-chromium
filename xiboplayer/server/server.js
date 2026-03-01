@@ -55,6 +55,10 @@ try {
     playerConfig.googleGeoApiKey = config.googleGeoApiKey;
     console.log(`[Server] Google Geolocation API key: configured`);
   }
+  if (config.playerApiBase) {
+    playerConfig.playerApiBase = config.playerApiBase;
+    console.log(`[Server] Player API base: ${config.playerApiBase}`);
+  }
 } catch (err) {
   if (err.code !== 'ENOENT') {
     console.warn(`[Server] Failed to read config: ${err.message}`);
