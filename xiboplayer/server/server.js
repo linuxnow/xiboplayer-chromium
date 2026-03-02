@@ -30,35 +30,29 @@ const pwaPath = pwaArg
 // Read config.json (if present) for CMS config and serverPort
 const configDir = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config');
 const configPath = path.join(configDir, 'xiboplayer', 'chromium', 'config.json');
-let cmsConfig;
-let playerConfig = {};
+// Keys that control the native shell — NOT forwarded to the PWA.
+// Common shell keys shared with Electron (mirrors @xiboplayer/utils SHELL_ONLY_KEYS).
+// TODO: use extractPwaConfig() from @xiboplayer/utils once published (>0.5.20)
+const SHELL_ONLY_KEYS = new Set([
+  'serverPort', 'kioskMode', 'fullscreen',
+  'hideMouseCursor', 'preventSleep', 'width', 'height',
+  // Chromium-specific:
+  'browser', 'extraBrowserFlags', 'relaxSslCerts',
+]);
+
+let pwaConfig;
 try {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
   if (config.serverPort) defaultPort = config.serverPort;
   if (config.cmsUrl) {
-    cmsConfig = {
-      cmsUrl: config.cmsUrl,
-      cmsKey: config.cmsKey || '',
-      displayName: config.displayName || '',
-    };
-    console.log(`[Server] CMS config loaded from ${configPath}: ${cmsConfig.cmsUrl}`);
+    console.log(`[Server] CMS config loaded from ${configPath}: ${config.cmsUrl}`);
   }
-  if (config.controls) {
-    playerConfig.controls = config.controls;
-    console.log(`[Server] Controls config loaded:`, JSON.stringify(config.controls));
+  // Extract PWA config — deny-list approach: everything not shell-only flows through.
+  pwaConfig = {};
+  for (const [key, value] of Object.entries(config)) {
+    if (!SHELL_ONLY_KEYS.has(key)) pwaConfig[key] = value;
   }
-  if (config.transport) {
-    playerConfig.transport = config.transport;
-    console.log(`[Server] Transport: ${config.transport}`);
-  }
-  if (config.googleGeoApiKey) {
-    playerConfig.googleGeoApiKey = config.googleGeoApiKey;
-    console.log(`[Server] Google Geolocation API key: configured`);
-  }
-  if (config.playerApiBase) {
-    playerConfig.playerApiBase = config.playerApiBase;
-    console.log(`[Server] Player API base: ${config.playerApiBase}`);
-  }
+  if (!Object.keys(pwaConfig).length) pwaConfig = undefined;
 } catch (err) {
   if (err.code !== 'ENOENT') {
     console.warn(`[Server] Failed to read config: ${err.message}`);
@@ -76,7 +70,7 @@ console.log(`[Server] Port: ${serverPort}`);
 console.log(`[Server] Data dir: ${dataDir}`);
 
 import('@xiboplayer/proxy').then(({ startServer }) => {
-  return startServer({ port: serverPort, pwaPath, appVersion: APP_VERSION, cmsConfig, configFilePath: configPath, dataDir, playerConfig });
+  return startServer({ port: serverPort, pwaPath, appVersion: APP_VERSION, pwaConfig, configFilePath: configPath, dataDir });
 }).catch((err) => {
   console.error('[Server] Failed to start:', err.message);
   process.exit(1);
