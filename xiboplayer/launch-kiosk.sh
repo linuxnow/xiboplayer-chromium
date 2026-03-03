@@ -321,6 +321,30 @@ build_chromium_args() {
         echo "[xiboplayer]   SSL:     relaxed (--ignore-certificate-errors)" >&2
     fi
 
+    # Adaptive memory tuning based on device RAM and CPU count
+    # Same tiers as Electron (main.js) and SW (calculateChunkConfig)
+    local total_ram_kb total_ram_gb cpu_count max_old_space_mb raster_threads
+    total_ram_kb=$(awk '/^MemTotal:/ { print $2 }' /proc/meminfo)
+    total_ram_gb=$(( (total_ram_kb + 524288) / 1048576 ))  # round to nearest GB
+    cpu_count=$(nproc 2>/dev/null || echo 2)
+
+    if (( total_ram_gb <= 1 )); then
+        max_old_space_mb=128; raster_threads=1
+    elif (( total_ram_gb <= 2 )); then
+        max_old_space_mb=192; raster_threads=2
+    elif (( total_ram_gb <= 4 )); then
+        max_old_space_mb=256; raster_threads=$(( cpu_count < 2 ? cpu_count : 2 ))
+    else
+        max_old_space_mb=384; raster_threads=$(( cpu_count < 4 ? cpu_count : 4 ))
+    fi
+
+    BROWSER_ARGS+=(
+        --js-flags="--max-old-space-size=${max_old_space_mb}"
+        --num-raster-threads="$raster_threads"
+        --gpu-rasterization-msaa-sample-count=0
+    )
+    echo "[xiboplayer]   Memory:  ${total_ram_gb}GB RAM, ${cpu_count} CPUs → V8 heap ${max_old_space_mb}MB, ${raster_threads} raster threads" >&2
+
     # Append any user-defined extra flags
     if [[ -n "$EXTRA_BROWSER_FLAGS" ]]; then
         local -a extra
