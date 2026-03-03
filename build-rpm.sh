@@ -4,6 +4,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${PKG_LIB_RPM:-${SCRIPT_DIR}/scripts/packaging/lib-rpm.sh}"
+
 PKG_NAME="xiboplayer-chromium"
 VERSION="${1:-0.6.0}"
 RELEASE="${2:-1}"
@@ -14,7 +16,6 @@ if ! command -v rpmbuild &>/dev/null; then
     echo "ERROR: rpmbuild not found. Install: sudo dnf install rpm-build"
     exit 1
 fi
-
 if ! command -v node &>/dev/null; then
     echo "ERROR: node not found. Install: sudo dnf install nodejs"
     exit 1
@@ -24,12 +25,11 @@ BUILD_ROOT="${SCRIPT_DIR}/_rpmbuild"
 rm -rf "$BUILD_ROOT"
 mkdir -p "$BUILD_ROOT"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
-# --- Create source tarball ---
+# ── Create source tarball ─────────────────────────────────────────────
 echo "==> Creating source tarball..."
 SRC_DIR="${BUILD_ROOT}/SOURCES/${PKG_NAME}-${VERSION}"
 mkdir -p "$SRC_DIR/server"
 
-# Copy source files
 cp "$SCRIPT_DIR/xiboplayer/launch-kiosk.sh" "$SRC_DIR/"
 cp "$SCRIPT_DIR/xiboplayer/config.json" "$SRC_DIR/"
 cp "$SCRIPT_DIR/xiboplayer/xiboplayer-chromium.service" "$SRC_DIR/"
@@ -41,12 +41,11 @@ cp "$SCRIPT_DIR/xiboplayer/config.json.example" "$SRC_DIR/"
 cp "$SCRIPT_DIR/CONFIG.md" "$SRC_DIR/"
 cp "$SCRIPT_DIR/README.md" "$SRC_DIR/"
 
-# Create tarball
 cd "${BUILD_ROOT}/SOURCES"
 tar czf "${PKG_NAME}-${VERSION}.tar.gz" "${PKG_NAME}-${VERSION}"
 rm -rf "${PKG_NAME}-${VERSION}"
 
-# Copy spec with version substitution (Release is set in the spec itself)
+# Copy spec with version substitution
 sed -e "s/^Version:.*/Version:        ${VERSION}/" \
     "$SCRIPT_DIR/xiboplayer-chromium.spec" \
     > "$BUILD_ROOT/SPECS/${PKG_NAME}.spec"
@@ -56,18 +55,9 @@ rpmbuild \
     --define "_topdir $BUILD_ROOT" \
     -ba "$BUILD_ROOT/SPECS/${PKG_NAME}.spec"
 
-# Collect output
+# ── Collect and display results ───────────────────────────────────────
 DIST_DIR="${SCRIPT_DIR}/dist"
-mkdir -p "$DIST_DIR"
-find "$BUILD_ROOT/RPMS" -name "*.rpm" -exec cp -v {} "$DIST_DIR/" \;
-find "$BUILD_ROOT/SRPMS" -name "*.src.rpm" -exec cp -v {} "$DIST_DIR/" \;
-
-echo ""
-echo "==> Built:"
-for rpm in "$DIST_DIR"/*.rpm; do
-    [[ -f "$rpm" ]] && echo "    $(basename "$rpm") ($(du -h "$rpm" | cut -f1))"
-done
-echo "    Install: sudo dnf install ${DIST_DIR}/${PKG_NAME}-${VERSION}-*.noarch.rpm"
-echo "    Enable:  systemctl --user enable --now xiboplayer-chromium.service"
+pkg_collect_rpms "$BUILD_ROOT"
+pkg_show_result_rpm
 
 rm -rf "$BUILD_ROOT"
