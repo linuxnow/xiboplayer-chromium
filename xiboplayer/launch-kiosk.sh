@@ -47,7 +47,7 @@ cfg_read() {
     local varname="$1" key="$2" file="$3"
     local val
     val=$(jq -r ".$key // empty" "$file" 2>/dev/null) || true
-    [[ -n "$val" ]] && printf -v "$varname" '%s' "$val"
+    [[ -n "$val" ]] && printf -v "$varname" '%s' "$val" || true
 }
 
 load_config() {
@@ -296,6 +296,7 @@ build_chromium_args() {
         --password-store=basic
         --lang=en-US
         "--auto-select-desktop-capture-source=Entire screen"
+        --auto-accept-this-tab-capture
         # Prevent GPU crash and renderer freeze when screen is locked/off
         --disable-gpu-watchdog
         --disable-background-timer-throttling
@@ -423,9 +424,23 @@ main() {
   "VideoCaptureAllowed": true,
   "AudioCaptureAllowed": true,
   "VideoCaptureAllowedUrls": ["http://localhost:${SERVER_PORT}"],
-  "AudioCaptureAllowedUrls": ["http://localhost:${SERVER_PORT}"]
+  "AudioCaptureAllowedUrls": ["http://localhost:${SERVER_PORT}"],
+  "ScreenCaptureAllowed": true,
+  "ScreenCaptureAllowedByOrigins": ["http://localhost:${SERVER_PORT}"],
+  "TabCaptureAllowedByOrigins": ["http://localhost:${SERVER_PORT}"],
+  "RestoreOnStartup": 4,
+  "RestoreOnStartupURLs": []
 }
 POLICY
+
+    # Suppress "Chrome didn't shut down correctly" restore dialog.
+    # Flags (--disable-session-crashed-bubble, --noerrdialogs) don't reliably
+    # suppress the infobar. Patching the Preferences file on every launch does.
+    local prefs_file="$DATA_DIR/Default/Preferences"
+    if [[ -f "$prefs_file" ]]; then
+        # Use sed to patch exit_type and exited_cleanly in-place
+        sed -i 's/"exit_type":"[^"]*"/"exit_type":"Normal"/g; s/"exited_cleanly":false/"exited_cleanly":true/g' "$prefs_file"
+    fi
 
     # Export Google Geolocation API key for the SDK (if configured)
     if [[ -n "${GOOGLE_GEO_API_KEY:-}" ]]; then
