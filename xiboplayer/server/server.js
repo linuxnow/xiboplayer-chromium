@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (c) 2024-2026 Pau Aliagas <linuxnow@gmail.com>
 /**
  * Xibo Player - Local Server for Chromium Kiosk
  *
@@ -67,7 +69,8 @@ Promise.all([
     if (cmsId) pwaConfig.cmsId = cmsId;
   }
   const allowShellCommands = !!(rawConfig && rawConfig.allowShellCommands);
-  return startServer({ port: serverPort, pwaPath, appVersion: APP_VERSION, pwaConfig, configFilePath: configPath, dataDir, allowShellCommands });
+  const listenAddress = (rawConfig && rawConfig.listenAddress) || 'localhost';
+  return startServer({ port: serverPort, listenAddress, pwaPath, appVersion: APP_VERSION, pwaConfig, configFilePath: configPath, dataDir, allowShellCommands });
 }).catch((err) => {
   console.error('[Server] Failed to start:', err.message);
   process.exit(1);

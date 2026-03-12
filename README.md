@@ -229,3 +229,7 @@ The build scripts fetch the PWA dist from a local sibling build (`../xiboplayer-
 
 - **Runtime:** Chromium (or Chrome), Node.js >= 18, jq, curl
 - **Build:** Node.js, npm, rpmbuild (RPM) or dpkg-deb (DEB)
+
+## License
+
+AGPL-3.0-or-later — see [LICENSE](LICENSE) for details.

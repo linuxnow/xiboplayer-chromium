@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (c) 2024-2026 Pau Aliagas <linuxnow@gmail.com>
 # Build xiboplayer-chromium DEB package (self-contained with bundled PWA)
 # Usage: ./build-deb.sh [version] [release]
 set -euo pipefail

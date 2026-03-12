@@ -3,6 +3,7 @@
   "version": "0.6.8",
   "private": true,
   "description": "Local HTTP server for xiboplayer-chromium (serves PWA + proxies CMS)",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@xiboplayer/proxy": "0.6.8",
     "@xiboplayer/pwa": "0.6.8"
