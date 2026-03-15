@@ -69,8 +69,9 @@ Promise.all([
     if (cmsId) pwaConfig.cmsId = cmsId;
   }
   const allowShellCommands = !!(rawConfig && rawConfig.allowShellCommands);
-  const listenAddress = (rawConfig && rawConfig.listenAddress) || 'localhost';
-  return startServer({ port: serverPort, listenAddress, pwaPath, appVersion: APP_VERSION, pwaConfig, configFilePath: configPath, dataDir, allowShellCommands });
+  const listenAddress = rawConfig?.listenAddress || (rawConfig?.sync?.isLead ? '0.0.0.0' : 'localhost');
+  const syncSecret = rawConfig?.sync?.cmsKey || rawConfig?.cmsKey;
+  return startServer({ port: serverPort, listenAddress, pwaPath, appVersion: APP_VERSION, pwaConfig, configFilePath: configPath, dataDir, allowShellCommands, syncSecret });
 }).catch((err) => {
   console.error('[Server] Failed to start:', err.message);
   process.exit(1);
