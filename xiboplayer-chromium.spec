@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           xiboplayer-chromium
-Version:        0.6.13
+Version:        0.7.0
 Release:        1%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
@@ -118,6 +118,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Mar 17 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.0-1
+- Cross-device multi-display sync with <8ms precision, 12 choreography effects, token-authenticated WebSocket relay, unified prepare/show layout flow, sync status overlay, setup focus fix, instance-aware Chromium data dirs
+
 * Fri Mar 13 2026 Pau Aliagas <linuxnow@gmail.com> - 0.6.13-1
 - fix: serve XMDS dependencies from media/file fallback, fix CMS custom volume mount persistence
 
