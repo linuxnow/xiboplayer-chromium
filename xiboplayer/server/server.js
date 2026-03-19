@@ -25,7 +25,7 @@ const portArg = args.find(a => a.startsWith('--port='));
 const pwaArg = args.find(a => a.startsWith('--pwa-path='));
 const instanceArg = args.find(a => a.startsWith('--instance='));
 const instanceName = instanceArg ? instanceArg.split('=')[1] : '';
-const instanceDir = instanceName || 'chromium';
+const instanceDir = instanceName ? `chromium-${instanceName}` : 'chromium';
 // Port priority: CLI --port > config.json serverPort > default 8766
 let defaultPort = 8766;
 const pwaPath = pwaArg
