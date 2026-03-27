@@ -42,6 +42,7 @@ cp "$SCRIPT_DIR/xiboplayer/server/package.json" "$SRC_DIR/server/"
 cp "$SCRIPT_DIR/xiboplayer/config.json.example" "$SRC_DIR/"
 cp "$SCRIPT_DIR/CONFIG.md" "$SRC_DIR/"
 cp "$SCRIPT_DIR/README.md" "$SRC_DIR/"
+cp -r "$SCRIPT_DIR/configs" "$SRC_DIR/"
 
 cd "${BUILD_ROOT}/SOURCES"
 tar czf "${PKG_NAME}-${VERSION}.tar.gz" "${PKG_NAME}-${VERSION}"
