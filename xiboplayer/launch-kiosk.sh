@@ -294,7 +294,8 @@ build_chromium_args() {
         --overscroll-history-navigation=0
         --autoplay-policy=no-user-gesture-required
         --check-for-update-interval=31536000
-        --disable-features=TranslateUI,Translate
+        --disable-features=TranslateUI,Translate,SpareRendererForSitePerProcess
+        --disable-extensions
         --disable-ipc-flooding-protection
         --password-store=basic
         --lang=en-US
@@ -304,6 +305,18 @@ build_chromium_args() {
         --disable-gpu-watchdog
         --disable-background-timer-throttling
         --disable-renderer-backgrounding
+        # Strip unnecessary Chrome services to reduce memory/CPU (~50-80 MB savings)
+        --disable-background-networking
+        --disable-client-side-phishing-detection
+        --disable-default-apps
+        --disable-hang-monitor
+        --disable-popup-blocking
+        --disable-prompt-on-repost
+        --disable-sync
+        --disable-domain-reliability
+        --no-pings
+        --disable-breakpad
+        --metrics-recording-only
     )
 
     # Kiosk / fullscreen / window size

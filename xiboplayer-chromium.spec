@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           xiboplayer-chromium
-Version:        0.7.1
+Version:        0.7.7
 Release:        1%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
@@ -118,6 +118,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Mar 26 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.7-1
+- Triple preload fix, video GPU buffer release, stripped Chrome services for stable Chromium kiosk
+
+* Wed Mar 25 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.6-1
+- Timer deferral fix, offline playback, download/cache race fixes, Electron 41 with --no-zygote GPU fix, Chromium kiosk optimization
+
+* Mon Mar 24 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.5-2
+- Optimize kiosk: disable extensions and spare renderer process
+- Removes GNOME browser connector, prevents idle renderer accumulation
+
+* Mon Mar 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.5-1
+- Store protocol 204, zero console errors, logger override, timeline badge fix
+
+* Sun Mar 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.4-1
+- Preloaded video autoplay and duration tracking fix, refactoring, 1629 tests
+
+* Sat Mar 21 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.3-1
+- Safe chunked download chain: write locks, timeout scaling, auth persistence (#285)
+
+* Fri Mar 20 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.2-1
+- Shared content cache across instances, startup layout storm fix, Playwright e2e tests, POST /config controls fix, cache migration via hardlinks
+
 * Thu Mar 19 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.1-1
 - mDNS auto-discovery for zero-config video walls, CORE_EVENTS constants, shared openIDB helper, setup.html Electron fix
 

@@ -50,9 +50,12 @@ try {
 
 const serverPort = portArg ? parseInt(portArg.split('=')[1], 10) : defaultPort;
 
-// XDG-compliant data directory for DiskCache media storage (instance-aware)
+// XDG-compliant data directory for ContentStore media cache.
+// Shared across all instances on the same machine — same CMS content is
+// stored once, not per-instance. Safe: ContentStore uses atomic writes.
+// Per-CMS isolation is handled by the {cmsId} subdirectory inside dataDir.
 const dataHome = process.env.XDG_DATA_HOME || path.join(os.homedir(), '.local', 'share');
-const dataDir = path.join(dataHome, 'xiboplayer', instanceDir);
+const dataDir = path.join(dataHome, 'xiboplayer', 'shared');
 
 console.log(`[Server] PWA path: ${pwaPath}`);
 console.log(`[Server] Port: ${serverPort}`);
@@ -62,7 +65,10 @@ console.log(`[Server] Data dir: ${dataDir}`);
 Promise.all([
   import('@xiboplayer/proxy'),
   import('@xiboplayer/utils/config'),
-]).then(([{ startServer }, { extractPwaConfig, computeCmsId }]) => {
+]).then(([{ startServer, migrateContentCache }, { extractPwaConfig, computeCmsId }]) => {
+  // One-time migration: hardlink old per-instance cache to shared cache (remove after v0.7.3)
+  migrateContentCache(dataHome);
+
   // Extract PWA config using SDK's deny-list filter (Chromium-specific extras excluded)
   const pwaConfig = rawConfig ? extractPwaConfig(rawConfig, ['browser', 'extraBrowserFlags', 'allowShellCommands']) : undefined;
 
