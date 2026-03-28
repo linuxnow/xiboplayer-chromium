@@ -427,6 +427,9 @@ build_chromium_args() {
         --enable-gpu-rasterization
         --enable-zero-copy
         --enable-features=CanvasOopRasterization
+        # Larger tiles = fewer raster jobs for fullscreen signage content
+        --default-tile-width=512
+        --default-tile-height=512
         # Single-origin signage: limit to 1 renderer (default spawns per-frame)
         --renderer-process-limit=1
         # Prevent GPU crash and renderer freeze when screen is locked/off
