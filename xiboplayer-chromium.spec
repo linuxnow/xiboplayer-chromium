@@ -20,6 +20,7 @@ Requires:       curl
 Requires:       systemd
 Recommends:     xdotool
 Recommends:     xset
+Recommends:     unclutter
 
 # Smooth upgrade from the old package name
 Obsoletes:      xiboplayer-pwa < %{version}-%{release}
