@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   wait-for-pwa:
@@ -66,4 +66,13 @@ jobs:
       default-version: '0.7.10'
       extra-build-deps: 'nodejs npm'
     secrets: inherit
+
+  release:
+    needs: [rpm, deb]
+    uses: xibo-players/.github/.github/workflows/create-release.yml@main
+    with:
+      package-name: xiboplayer-chromium
+      rpm-arch: 'noarch'
+      deb-arch: 'all'
+      description: 'Chromium kiosk-mode Xibo digital signage player.'
 
