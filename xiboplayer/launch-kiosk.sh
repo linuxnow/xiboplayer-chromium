@@ -509,7 +509,10 @@ build_chromium_args() {
     #   systemctl --user unset-environment XIBOPLAYER_DEBUG_PORT
     #   systemctl --user restart xiboplayer-chromium
     if [[ -n "${XIBOPLAYER_DEBUG_PORT:-}" ]]; then
-        BROWSER_ARGS+=(--remote-debugging-port="$XIBOPLAYER_DEBUG_PORT")
+        BROWSER_ARGS+=(
+            --remote-debugging-port="$XIBOPLAYER_DEBUG_PORT"
+            --remote-debugging-address=127.0.0.1
+        )
         echo "[xiboplayer]   Debug:   CDP on port $XIBOPLAYER_DEBUG_PORT (127.0.0.1 only)" >&2
     fi
 
