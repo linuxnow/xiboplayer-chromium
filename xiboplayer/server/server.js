@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (c) 2024-2026 Pau Aliagas <linuxnow@gmail.com>
 /**
- * Xibo Player - Local Server for Chromium Kiosk
+ * xiboplayer - Local Server for Chromium Kiosk
  *
  * Serves the bundled PWA player and proxies CMS API requests.
  * Uses @xiboplayer/proxy for all proxy routes and static serving.

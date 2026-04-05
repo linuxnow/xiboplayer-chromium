@@ -1,4 +1,4 @@
-# Xibo Player — Chromium Kiosk (Self-contained)
+# xiboplayer — Chromium Kiosk (Self-contained)
 
 Self-contained Xibo digital signage player for kiosk deployments on Fedora, RHEL, Ubuntu, and Debian.
 

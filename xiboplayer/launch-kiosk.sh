@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Copyright (c) 2024-2026 Pau Aliagas <linuxnow@gmail.com>
 # =============================================================================
-# Xibo Player — Self-contained Chromium Kiosk
+# xiboplayer — Self-contained Chromium Kiosk
 #
 # Starts a local Node.js server that serves the bundled PWA player and proxies
 # CMS API requests, then launches Chromium in kiosk mode pointing at localhost.
@@ -535,7 +535,7 @@ build_chromium_args() {
 # Main
 # ---------------------------------------------------------------------------
 main() {
-    echo "[xiboplayer] Starting Xibo Player (self-contained)" >&2
+    echo "[xiboplayer] Starting xiboplayer (self-contained)" >&2
     [[ -n "$INSTANCE" ]] && echo "[xiboplayer]   Instance: $INSTANCE" >&2
     echo "[xiboplayer]   Browser: $BROWSER" >&2
     echo "[xiboplayer]   Server:  http://localhost:$SERVER_PORT" >&2
