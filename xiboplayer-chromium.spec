@@ -104,8 +104,8 @@ install -Dm644 xiboplayer.png \
 %{_datadir}/icons/hicolor/256x256/apps/xiboplayer.png
 
 %post
-# Register alternatives (lower priority than Electron)
-alternatives --install %{_bindir}/xiboplayer xiboplayer %{_bindir}/%{name} 50
+# Register alternatives (higher priority than Electron)
+alternatives --install %{_bindir}/xiboplayer xiboplayer %{_bindir}/%{name} 60
 
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
