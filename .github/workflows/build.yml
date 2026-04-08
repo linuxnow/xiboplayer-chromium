@@ -61,7 +61,12 @@ jobs:
       rpm-spec: 'xiboplayer-chromium.spec'
       rpm-script: 'build-rpm.sh'
       fedora-matrix: '["43"]'
-      arch-matrix: '["x86_64", "aarch64"]'
+      # Package is BuildArch: noarch — one build produces a .noarch.rpm
+      # that works on any architecture. Building on both x86_64 and aarch64
+      # produces two artifacts with the same filename; download-artifact's
+      # merge-multiple step collides them and corrupts the payload during
+      # overwrite, breaking signing.
+      arch-matrix: '["x86_64"]'
       gpg-sign: true
       publish-to-repo: true
     secrets: inherit
