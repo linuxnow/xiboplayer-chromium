@@ -164,7 +164,7 @@ fi
 * Wed Mar 25 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.6-1
 - Timer deferral fix, offline playback, download/cache race fixes, Electron 41 with --no-zygote GPU fix, Chromium kiosk optimization
 
-* Mon Mar 24 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.5-2
+* Tue Mar 24 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.5-2
 - Optimize kiosk: disable extensions and spare renderer process
 - Removes GNOME browser connector, prevents idle renderer accumulation
 
@@ -234,7 +234,7 @@ fi
 * Sat Feb 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.17-1
 - Decouple Chromium from SDK monorepo, fix cache clearing
 
-* Fri Feb 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.16-4
+* Sat Feb 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.5.16-4
 - Fall back to Google Chrome when Chromium binary is not found
 - Add --server-dir, --pwa-path and --no-kiosk CLI options for development
 
