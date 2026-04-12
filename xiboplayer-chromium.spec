@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           xiboplayer-chromium
-Version:        0.7.17
+Version:        0.7.18
 Release:        1%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
@@ -131,6 +131,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Sun Apr 12 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.18-1
+- Layout transitions and xmds reliability fixes
+
 * Wed Apr 08 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.17-1
 - Fix CmsApiClient.uploadMediaUrl to target /library/uploadUrl (xibo-players/xiboplayer#332). BREAKING: signature changes to uploadMediaUrl(url, type, {optionalName}).
 
