@@ -289,7 +289,7 @@ start_server() {
 detect_and_select_gpu() {
     local pref="${GPU_PREFERENCE:-${XIBO_GPU:-auto}}"
     local -a gpu_names=() gpu_vendors=() gpu_render_nodes=() gpu_ranks=() gpu_va_drivers=() gpu_has_display=() gpu_is_virtual=()
-    local best_idx=-1 best_rank=-1
+    local best_idx=-1 best_rank=-99
 
     for card_dir in /sys/class/drm/card[0-9]*; do
         [[ -d "$card_dir/device" ]] || continue
