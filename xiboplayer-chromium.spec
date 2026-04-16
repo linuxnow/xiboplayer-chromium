@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           xiboplayer-chromium
-Version:        0.7.20
+Version:        0.7.21
 Release:        1%{?dist}
 Summary:        Self-contained Xibo digital signage player (Chromium kiosk)
 
@@ -131,6 +131,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Apr 16 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.21-1
+- GPU fix followup: lower best_rank init so virtio rank -1 is selectable (bug in 0.7.20 virtual-GPU detection)
+
 * Thu Apr 16 2026 Pau Aliagas <linuxnow@gmail.com> - 0.7.20-1
 - GPU detection: virtio-gpu / QEMU / VMware SVGA force software rendering to avoid crash loop (MODE_CREATE_DUMB EACCES). Real GPUs unchanged. Opt-out via XIBOPLAYER_FORCE_GPU=1.
 
